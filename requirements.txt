@@ -5,3 +5,4 @@ Werkzeug==2.3.6
 gunicorn==21.2.0
 python-dotenv==1.0.0
 protobuf==4.24.4
+firebase-admin
