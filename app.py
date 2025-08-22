@@ -7,6 +7,16 @@ from datetime import datetime
 import json
 from functools import wraps
 
+# 🔹 Firebase Initialization (new code here)
+import firebase_admin
+from firebase_admin import credentials
+
+firebase_config = os.getenv("FIREBASE_CONFIG")
+if firebase_config and not firebase_admin._apps:
+    cred_dict = json.loads(firebase_config)
+    cred = credentials.Certificate(cred_dict)
+    firebase_admin.initialize_app(cred)
+    
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "supersecretkey")
 
