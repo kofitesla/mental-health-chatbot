@@ -1,0 +1,9 @@
+# mental_health_chatbot/.gitignore
+
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store"firebase-adminsdk.json" 
+"firebase-adminsdk.json" 
+"firebase-adminsdk.json" 
