@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .user-info {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info span {
+            color: #5a67d8;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            color: #e53e3e;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #e53e3e;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem; /* Added space for user info */
+        }
+
+        .header h1 {
+            color: #5a67d8;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 500px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: #5a67d8;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            color: #333;
+            margin-left: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 0.25rem;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: #5a67d8;
+        }
+
+        .send-button {
+            padding: 0.75rem 1.5rem;
+            background: #5a67d8;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: #4c51bf;
+        }
+
+        .send-button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-button {
+            padding: 0.75rem;
+            background: #5a67d8;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            text-align: center;
+            transition: background 0.3s;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+        }
+
+        .nav-button:hover {
+            background: #4c51bf;
+            transform: translateY(-2px);
+        }
+
+        .crisis-banner {
+            background: #fed7d7;
+            border: 1px solid #f56565;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .crisis-banner strong {
+            color: #c53030;
+        }
+
+        .loading {
+            display: none;
+            padding: 0.5rem;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 1rem;
+                justify-content: center;
+            }
+
+            .header {
+                margin-top: 0;
+            }
+
+            .chat-container {
+                margin: 1rem;
+                height: calc(100vh - 8rem);
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .navigation {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                flex-direction: row;
+                justify-content: center;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-info">
+        <span>👤 {{ username }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="header">
+        <h1>🤗 Mental Health Support</h1>
+        <p>A safe space for emotional support and mental wellness guidance</p>
+    </div>
+
+    <div class="crisis-banner">
+        <strong>Crisis Resources:</strong> If you're in immediate danger, call 911. 
+        For mental health crisis: Call or text 988 (Suicide Prevention Lifeline) or text HOME to 741741 (Crisis Text Line)
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+            {% for message in log %}
+            <div class="message {{ message.sender }}">
+                <div class="message-content">
+                    {{ message.text }}
+                    {% if message.timestamp %}
+                    <div class="message-time">{{ message.timestamp }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="loading" id="loadingIndicator">
+            The bot is thinking... 💭
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <input type="text" id="messageInput" class="chat-input" 
+                       placeholder="Share what's on your mind..." 
+                       maxlength="1000">
+                <button onclick="sendMessage()" class="send-button" id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <a href="/mood" class="nav-button">📝 Mood Journal</a>
+        <a href="/resources" class="nav-button">🆘 Resources</a>
+        <button onclick="clearChat()" class="nav-button" style="border: none;">🗑️ Clear Chat</button>
+    </div>
+
+    <script>
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const chatMessages = document.getElementById('chatMessages');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // Auto-focus input
+        messageInput.focus();
+
+        // Send message on Enter key
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Disable input during processing
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+            loadingIndicator.style.display = 'block';
+
+            // Add user message to chat
+            addMessage('user', message);
+            messageInput.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                if (data.response) {
+                    addMessage('assistant', data.response);
+                } else {
+                    addMessage('assistant', 'I apologize, but I encountered an error. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('assistant', 'I\'m having trouble connecting right now. Please check your connection and try again.');
+            } finally {
+                // Re-enable input
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                loadingIndicator.style.display = 'none';
+                messageInput.focus();
+            }
+        }
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const timestamp = new Date().toLocaleString();
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${formatMessage(text)}
+                    <div class="message-time">${timestamp}</div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function formatMessage(text) {
+            // Convert markdown-style formatting to HTML
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        async function clearChat() {
+            if (confirm('Are you sure you want to clear the chat history?')) {
+                try {
+                    await fetch('/clear-chat', { method: 'POST' });
+                    location.reload();
+                } catch (error) {
+                    console.error('Error clearing chat:', error);
+                }
+            }
+        }
+
+        // Auto-scroll to bottom on page load
+        window.addEventListener('load', function() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    </script>
+</body>
+</html>

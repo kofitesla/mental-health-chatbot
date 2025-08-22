@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Resources - Mental Health Support</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .user-info {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info span {
+            color: #5a67d8;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            color: #e53e3e;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #e53e3e;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+        }
+
+        .header h1 {
+            color: #5a67d8;
+            margin-bottom: 0.5rem;
+        }
+
+        .emergency-banner {
+            background: #fed7d7;
+            border: 2px solid #f56565;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .emergency-banner h2 {
+            color: #c53030;
+            margin-bottom: 1rem;
+        }
+
+        .emergency-contacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .emergency-contact {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .emergency-contact strong {
+            display: block;
+            color: #c53030;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-category {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-title {
+            color: #5a67d8;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+                }
+
+        .resource-list {
+            list-style: none;
+        }
+
+        .resource-item {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #5a67d8;
+        }
+
+        .resource-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .resource-contact {
+            color: #5a67d8;
+            font-weight: 500;
+        }
+
+        .resource-description {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .self-care-tips {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            margin-top: 2rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tip-card {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border-top: 4px solid #5a67d8;
+        }
+
+        .tip-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-description {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            padding: 0.75rem 1rem;
+            background: #5a67d8;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #4c51bf;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 1rem;
+                justify-content: center;
+            }
+
+            .header {
+                margin-top: 0;
+            }
+
+            .container {
+                margin: 1rem;
+                padding: 0;
+            }
+
+            .emergency-banner {
+                margin: 1rem;
+            }
+
+            .emergency-contacts {
+                grid-template-columns: 1fr;
+            }
+
+            .back-button {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin: 1rem auto;
+                display: block;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-info">
+        <span>👤 {{ username }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <a href="/" class="back-button">← Back to Chat</a>
+
+    <div class="header">
+        <h1>🆘 Mental Health Resources</h1>
+        <p>Professional help and support services for mental health and crisis situations</p>
+    </div>
+
+    <div class="emergency-banner">
+        <h2>🚨 Emergency & Crisis Resources</h2>
+        <p><strong>If you or someone you know is in immediate danger, call emergency services immediately.</strong></p>
+        
+        <div class="emergency-contacts">
+            <div class="emergency-contact">
+                <strong>911</strong>
+                <p>Emergency Services (US)</p>
+            </div>
+            <div class="emergency-contact">
+                <strong>988</strong>
+                <p>Suicide & Crisis Lifeline (US)</p>
+            </div>
+            <div class="emergency-contact">
+                <strong>Text HOME to 741741</strong>
+                <p>Crisis Text Line</p>
+            </div>
+            <div class="emergency-contact">
+                <strong>1-800-366-8288</strong>
+                <p>Self-Injury Outreach & Support</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="resources-grid">
+            <div class="resource-category">
+                <div class="category-icon">📞</div>
+                <h3 class="category-title">Crisis Hotlines</h3>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <div class="resource-name">National Suicide Prevention Lifeline</div>
+                        <div class="resource-contact">988 or 1-800-273-8255</div>
+                        <div class="resource-description">24/7 free and confidential support for people in distress</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Crisis Text Line</div>
+                        <div class="resource-contact">Text HOME to 741741</div>
+                        <div class="resource-description">24/7 crisis support via text message</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">SAMHSA National Helpline</div>
+                        <div class="resource-contact">1-800-662-4357</div>
+                        <div class="resource-description">Treatment referral and information service</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">NAMI Helpline</div>
+                        <div class="resource-contact">1-800-950-6264</div>
+                        <div class="resource-description">Mental health information and support</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="category-icon">🏥</div>
+                <h3 class="category-title">Professional Help</h3>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <div class="resource-name">Psychology Today</div>
+                        <div class="resource-contact">psychologytoday.com</div>
+                        <div class="resource-description">Find therapists, psychiatrists, and treatment centers</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">BetterHelp</div>
+                        <div class="resource-contact">betterhelp.com</div>
+                        <div class="resource-description">Online therapy and counseling platform</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Talkspace</div>
+                        <div class="resource-contact">talkspace.com</div>
+                        <div class="resource-description">Text-based therapy and video sessions</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Your Primary Care Doctor</div>
+                        <div class="resource-contact">Contact your healthcare provider</div>
+                        <div class="resource-description">Can provide referrals and basic mental health care</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="category-icon">👥</div>
+                <h3 class="category-title">Support Groups</h3>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <div class="resource-name">NAMI Support Groups</div>
+                        <div class="resource-contact">nami.org</div>
+                        <div class="resource-description">Peer support groups for mental health conditions</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Depression and Bipolar Support Alliance</div>
+                        <div class="resource-contact">dbsalliance.org</div>
+                        <div class="resource-description">Support groups for mood disorders</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Anxiety and Depression Association</div>
+                        <div class="resource-contact">adaa.org</div>
+                        <div class="resource-description">Resources and support for anxiety disorders</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Mental Health America</div>
+                        <div class="resource-contact">mhanational.org</div>
+                        <div class="resource-description">Local support groups and resources</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="category-icon">📱</div>
+                <h3 class="category-title">Mental Health Apps</h3>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <div class="resource-name">Headspace</div>
+                        <div class="resource-contact">Meditation & Mindfulness</div>
+                        <div class="resource-description">Guided meditation and sleep stories</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Calm</div>
+                        <div class="resource-contact">Meditation & Sleep</div>
+                        <div class="resource-description">Relaxation techniques and sleep support</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Sanvello</div>
+                        <div class="resource-contact">Anxiety & Depression</div>
+                        <div class="resource-description">Mood tracking and coping tools</div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-name">Youper</div>
+                        <div class="resource-contact">AI Mental Health Assistant</div>
+                        <div class="resource-description">Emotional health tracking and support</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="self-care-tips">
+            <h2 class="category-title">💚 Self-Care & Coping Strategies</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🧘</div>
+                    <div class="tip-title">Mindfulness</div>
+                    <div class="tip-description">Practice deep breathing, meditation, or mindful observation of your surroundings</div>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🏃</div>
+                    <div class="tip-title">Physical Activity</div>
+                    <div class="tip-description">Regular exercise, even a short walk, can improve mood and reduce stress</div>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">😴</div>
+                    <div class="tip-title">Quality Sleep</div>
+                    <div class="tip-description">Maintain a regular sleep schedule and create a relaxing bedtime routine</div>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🤝</div>
+                    <div class="tip-title">Social Connection</div>
+                    <div class="tip-description">Reach out to friends, family, or support groups for connection and understanding</div>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">📝</div>
+                    <div class="tip-title">Journaling</div>
+                    <div class="tip-description">Write down thoughts and feelings to process emotions and track patterns</div>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🎨</div>
+                    <div class="tip-title">Creative Expression</div>
+                    <div class="tip-description">Engage in art, music, writing, or other creative activities for emotional release</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some smooth scrolling and interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll for any internal links
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Add click-to-call functionality for phone numbers
+            const phoneNumbers = document.querySelectorAll('.resource-contact');
+            phoneNumbers.forEach(contact => {
+                const text = contact.textContent.trim();
+                if (/^\d{3}-\d{3}-\d{4}$|^\d{10}$|^988$|^911$/.test(text)) {
+                    contact.style.cursor = 'pointer';
+                    contact.addEventListener('click', function() {
+                        window.location.href = `tel:${text.replace(/\D/g, '')}`;
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
