@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Journal - Mental Health Support</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .user-info {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info span {
+            color: #5a67d8;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            color: #e53e3e;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #e53e3e;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+        }
+
+        .header h1 {
+            color: #5a67d8;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .mood-form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .mood-form h2 {
+            color: #5a67d8;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .mood-selector {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .mood-option {
+            flex: 1;
+            min-width: 100px;
+            position: relative;
+        }
+
+        .mood-option input[type="radio"] {
+            display: none;
+        }
+
+        .mood-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .mood-option label:hover {
+            border-color: #5a67d8;
+            background: #f7fafc;
+        }
+
+        .mood-option input[type="radio"]:checked + label {
+            border-color: #5a67d8;
+            background: #ebf4ff;
+        }
+
+        .mood-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mood-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .thoughts-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .thoughts-input:focus {
+            border-color: #5a67d8;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #5a67d8;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-button:hover {
+            background: #4c51bf;
+        }
+
+        .journal-entries {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .journal-entries h2 {
+            color: #5a67d8;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .entry {
+            border-left: 4px solid #5a67d8;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f7fafc;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .entry-mood {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .entry-time {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .entry-thoughts {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            padding: 0.75rem 1rem;
+            background: #5a67d8;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #4c51bf;
+            transform: translateY(-2px);
+        }
+
+        .mood-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #5a67d8;
+        }
+
+        .stat-label {
+            color: #718096;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 1rem;
+                justify-content: center;
+            }
+
+            .header {
+                margin-top: 0;
+            }
+
+            .container {
+                margin: 1rem;
+                padding: 0;
+            }
+
+            .mood-selector {
+                flex-direction: column;
+            }
+
+            .mood-option {
+                min-width: auto;
+            }
+
+            .back-button {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                margin: 1rem auto;
+                display: block;
+                width: fit-content;
+            }
+
+            .entry-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-info">
+        <span>👤 {{ username }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <a href="/" class="back-button">← Back to Chat</a>
+
+    <div class="header">
+        <h1>📝 Mood Journal</h1>
+        <p>Track your emotions and thoughts for better mental health awareness</p>
+    </div>
+
+    <div class="container">
+        <div class="mood-form-container">
+            <h2>How are you feeling today?</h2>
+            <form method="POST" class="mood-form">
+                <div class="form-group">
+                    <label>Select your mood:</label>
+                    <div class="mood-selector">
+                        <div class="mood-option">
+                            <input type="radio" id="terrible" name="mood" value="terrible" required>
+                            <label for="terrible">
+                                <div class="mood-emoji">😢</div>
+                                <div class="mood-text">Terrible</div>
+                            </label>
+                        </div>
+                        <div class="mood-option">
+                            <input type="radio" id="bad" name="mood" value="bad" required>
+                            <label for="bad">
+                                <div class="mood-emoji">😟</div>
+                                <div class="mood-text">Bad</div>
+                            </label>
+                        </div>
+                        <div class="mood-option">
+                            <input type="radio" id="okay" name="mood" value="okay" required>
+                            <label for="okay">
+                                <div class="mood-emoji">😐</div>
+                                <div class="mood-text">Okay</div>
+                            </label>
+                        </div>
+                        <div class="mood-option">
+                            <input type="radio" id="good" name="mood" value="good" required>
+                            <label for="good">
+                                <div class="mood-emoji">😊</div>
+                                <div class="mood-text">Good</div>
+                            </label>
+                        </div>
+                        <div class="mood-option">
+                            <input type="radio" id="great" name="mood" value="great" required>
+                            <label for="great">
+                                <div class="mood-emoji">😄</div>
+                                <div class="mood-text">Great</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="thoughts">What's on your mind? (Optional)</label>
+                    <textarea id="thoughts" name="thoughts" class="thoughts-input" 
+                             placeholder="Share your thoughts, feelings, what happened today, or what you're grateful for..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-button">Save Entry</button>
+            </form>
+        </div>
+
+        {% if entries %}
+        <div class="mood-stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ entries|length }}</div>
+                <div class="stat-label">Total Entries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ entries[-7:]|length if entries|length >= 7 else entries|length }}</div>
+                <div class="stat-label">This Week</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="journal-entries">
+            <h2>Your Journal Entries</h2>
+            
+            {% if entries %}
+                {% for entry in entries|reverse %}
+                <div class="entry">
+                    <div class="entry-header">
+                        <div class="entry-mood">
+                            {% if entry.mood == 'terrible' %}😢 Terrible
+                            {% elif entry.mood == 'bad' %}😟 Bad
+                            {% elif entry.mood == 'okay' %}😐 Okay
+                            {% elif entry.mood == 'good' %}😊 Good
+                            {% elif entry.mood == 'great' %}😄 Great
+                            {% endif %}
+                        </div>
+                        <div class="entry-time">{{ entry.timestamp }}</div>
+                    </div>
+                    {% if entry.thoughts %}
+                    <div class="entry-thoughts">
+                        "{{ entry.thoughts }}"
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No journal entries yet. Start by recording your first mood above! 📝</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity for better user experience
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.mood-form');
+            const thoughtsInput = document.getElementById('thoughts');
+            
+            // Auto-resize textarea
+            thoughtsInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Form submission feedback
+            form.addEventListener('submit', function(e) {
+                const submitButton = form.querySelector('.submit-button');
+                submitButton.textContent = 'Saving...';
+                submitButton.disabled = true;
+            });
+
+            // Smooth scroll to entries after form submission
+            if (window.location.hash === '#entries') {
+                document.querySelector('.journal-entries').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
